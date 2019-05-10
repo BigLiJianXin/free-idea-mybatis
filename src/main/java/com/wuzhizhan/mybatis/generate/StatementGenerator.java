@@ -79,13 +79,6 @@ public abstract class StatementGenerator {
         return Optional.absent();
     }
 
-    private static void doGenerate(@NotNull final StatementGenerator generator, @NotNull final PsiMethod method) {
-        (new WriteCommandAction.Simple(method.getProject(), new PsiFile[]{method.getContainingFile()}) {
-            protected void run() throws Throwable {
-                generator.execute(method);
-            }
-        }).execute();
-    }
 
     public static void applyGenerate(@Nullable final PsiMethod method) {
         if (null == method) return;
@@ -95,18 +88,10 @@ public abstract class StatementGenerator {
             generators[0].execute(method);
         } else {
             JBPopupFactory.getInstance().createListPopup(
-                    new BaseListPopupStep("[ Statement type for method: " + method.getName() + "]", generators) {
+                    new BaseListPopupStep<StatementGenerator>("[ Statement type for method: " + method.getName() + "]", generators) {
                         @Override
-                        public PopupStep onChosen(Object selectedValue, boolean finalChoice) {
-                            return this.doFinalStep(new Runnable() {
-                                public void run() {
-                                    WriteCommandAction.runWriteCommandAction(project, new Runnable() {
-                                        public void run() {
-                                            StatementGenerator.doGenerate((StatementGenerator) selectedValue, method);
-                                        }
-                                    });
-                                }
-                            });
+                        public PopupStep onChosen(StatementGenerator selectedValue, boolean finalChoice) {
+							return this.doFinalStep(() -> WriteCommandAction.runWriteCommandAction(project, () -> selectedValue.execute(method)));
                         }
                     }
             ).showInFocusCenter();

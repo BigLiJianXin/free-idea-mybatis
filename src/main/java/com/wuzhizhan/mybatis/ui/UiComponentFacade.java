@@ -2,6 +2,7 @@ package com.wuzhizhan.mybatis.ui;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -13,7 +14,6 @@ import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,7 +98,7 @@ public final class UiComponentFacade {
     private void setActionForExecutableListener(Runnable runnable, ExecutableListener listener) {
         final Application application = ApplicationManager.getApplication();
         if (listener.isWriteAction()) {
-            application.runWriteAction(runnable);
+            WriteCommandAction.runWriteCommandAction(project,runnable);
         } else {
             application.runReadAction(runnable);
         }
