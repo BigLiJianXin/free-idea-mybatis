@@ -13,22 +13,17 @@ free-idea-mybatis是一个提高mybatis编码的插件。实现了dao代码跳�
 ### 灵活使用alt+enter和ctrl+B实现提示和跳转
 - 生成mapper文件
     - alter+enter弹出
-![](https://raw.githubusercontent.com/wuzhizhan/free-idea-mybatis/master/doc/img/create_mapper.png)
-![](https://raw.githubusercontent.com/wuzhizhan/free-idea-mybatis/master/doc/img/choose_mapper_folder.jpg)
+![](https://raw.githubusercontent.com/BigXin0109/free-idea-mybatis/master/doc/img/create_mapper.png)
+![](https://raw.githubusercontent.com/BigXin0109/free-idea-mybatis/master/doc/img/choose_mapper_folder.jpg)
 - 生成statement语句
     - alter+enter弹出
-![](https://raw.githubusercontent.com/wuzhizhan/free-idea-mybatis/master/doc/img/create_statement.jpg)
+![](https://raw.githubusercontent.com/BigXin0109/free-idea-mybatis/master/doc/img/create_statement.jpg)
 - dao跳转到mapper（也可以ctrl+B跳入）
-- ![](https://raw.githubusercontent.com/wuzhizhan/free-idea-mybatis/master/doc/img/to_mapper.jpg)
+- ![](https://raw.githubusercontent.com/BigXin0109/free-idea-mybatis/master/doc/img/to_mapper.jpg)
 - mapper跳转回dao（也可以ctrl+b跳入)
-- ![](https://raw.githubusercontent.com/wuzhizhan/free-idea-mybatis/master/doc/img/to_code.jpg)
+- ![](https://raw.githubusercontent.com/BigXin0109/free-idea-mybatis/master/doc/img/to_code.jpg)
 
 
 ## TODO
 - 根据数据库字段生产bean
 - 快捷生成CURD操作
-
-## 我的微信公众号 - it新技术
-更多内容，欢迎关注公众号 【it新技术】
-- ![](https://raw.githubusercontent.com/wuzhizhan/free-idea-mybatis/master/doc/img/gzh_logo.jpg)
-![](https://raw.githubusercontent.com/wuzhizhan/free-idea-mybatis/master/doc/img/gzh_qrcode.jpg)

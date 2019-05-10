@@ -2,8 +2,8 @@ plugins {
     id 'org.jetbrains.intellij' version '0.3.1'
 }
 
-group = 'cn.wuzhizhan.idea.mybatis'
-version = '2018.05.17'
+group = 'cn.big.mybatis'
+version = '2019.05.10'
 
 apply plugin: 'java'
 sourceCompatibility = 1.8
@@ -23,7 +23,7 @@ intellij {
 }
 patchPluginXml {
     changeNotes """
-    <h4>2018.05.17</h4>
+    <h4>2019.05.10</h4>
       <ul>
         <li>fix some bugs</li>
       </ul>
