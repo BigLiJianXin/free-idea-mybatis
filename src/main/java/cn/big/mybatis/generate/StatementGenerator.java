@@ -2,6 +2,9 @@ package cn.big.mybatis.generate;
 
 import cn.big.mybatis.dom.model.GroupTwo;
 import cn.big.mybatis.dom.model.Mapper;
+import cn.big.mybatis.service.EditorService;
+import cn.big.mybatis.service.JavaService;
+import cn.big.mybatis.setting.MybatisSetting;
 import cn.big.mybatis.ui.ListSelectionListener;
 import cn.big.mybatis.ui.UiComponentFacade;
 import cn.big.mybatis.util.CollectionUtils;
@@ -9,25 +12,22 @@ import cn.big.mybatis.util.JavaUtils;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiPrimitiveType;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.CommonProcessors.CollectProcessor;
-import cn.big.mybatis.service.EditorService;
-import cn.big.mybatis.service.JavaService;
-import cn.big.mybatis.setting.MybatisSetting;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,15 +40,6 @@ import java.util.Set;
  */
 public abstract class StatementGenerator {
 
-	public static final StatementGenerator UPDATE_GENERATOR = new UpdateGenerator("update", "modify", "set");
-
-	public static final StatementGenerator SELECT_GENERATOR = new SelectGenerator("select", "get", "look", "find", "list", "search", "count", "query");
-
-	public static final StatementGenerator DELETE_GENERATOR = new DeleteGenerator("del", "cancel");
-
-	public static final StatementGenerator INSERT_GENERATOR = new InsertGenerator("insert", "add", "new");
-
-	public static final Set<StatementGenerator> ALL = ImmutableSet.of(UPDATE_GENERATOR, SELECT_GENERATOR, DELETE_GENERATOR, INSERT_GENERATOR);
 
 	private static final Function<Mapper, String> FUN = new Function<Mapper, String>() {
 		@Override
@@ -64,7 +55,7 @@ public abstract class StatementGenerator {
 			return Optional.absent();
 		}
 		PsiType returnType = method.getReturnType();
-		if (returnType instanceof PsiPrimitiveType && returnType != PsiType.VOID) {
+		if (returnType instanceof PsiPrimitiveType && !PsiType.VOID.equals(returnType)) {
 			return JavaUtils.findClazz(method.getProject(), ((PsiPrimitiveType) returnType).getBoxedTypeName());
 		} else if (returnType instanceof PsiClassReferenceType) {
 			PsiClassReferenceType type = (PsiClassReferenceType) returnType;
@@ -103,12 +94,12 @@ public abstract class StatementGenerator {
 		GenerateModel model = MybatisSetting.getInstance().getStatementGenerateModel();
 		String target = method.getName();
 		List<StatementGenerator> result = Lists.newArrayList();
-		for (StatementGenerator generator : ALL) {
+		for (StatementGenerator generator : GeneratorUtil.ALL) {
 			if (model.matchesAny(generator.getPatterns(), target)) {
 				result.add(generator);
 			}
 		}
-		return CollectionUtils.isNotEmpty(result) ? result.toArray(new StatementGenerator[result.size()]) : ALL.toArray(new StatementGenerator[ALL.size()]);
+		return CollectionUtils.isNotEmpty(result) ? result.toArray(new StatementGenerator[result.size()]) : GeneratorUtil.ALL.toArray(new StatementGenerator[GeneratorUtil.ALL.size()]);
 	}
 
 	private Set<String> patterns;
