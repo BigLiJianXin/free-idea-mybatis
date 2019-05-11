@@ -31,7 +31,7 @@ public class AliasClassReference extends PsiReferenceBase<XmlAttributeValue> {
 		if (attributeValue == null || attributeValue.getValue() == null) {
 			return null;
 		}
-		return AliasFacade.getInstance(attributeValue.getProject()).findPsiClass(attributeValue, attributeValue.getValue()).orNull();
+		return AliasFacade.getInstance(attributeValue.getProject()).findPsiClass(attributeValue, attributeValue.getValue()).orElse(null);
 	}
 
 	@NotNull

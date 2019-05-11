@@ -9,19 +9,17 @@ import cn.big.mybatis.dom.model.Update;
 import cn.big.mybatis.util.Icons;
 import cn.big.mybatis.util.JavaUtils;
 import cn.big.mybatis.util.MapperUtils;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomUtil;
-
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.Optional;
 
 /**
  * @author yanglin
@@ -47,7 +45,7 @@ public class StatementLineMarkerProvider extends SimpleLineMarkerProvider<XmlTag
     @Override
     public Optional<PsiMethod> apply(@NotNull XmlTag from) {
         DomElement domElement = DomUtil.getDomElement(from);
-        return null == domElement ? Optional.<PsiMethod>absent() : JavaUtils.findMethod(from.getProject(), (IdDomElement) domElement);
+        return null == domElement ? Optional.empty() : JavaUtils.findMethod(from.getProject(), (IdDomElement) domElement);
     }
 
     private boolean isTargetType(PsiElement element) {

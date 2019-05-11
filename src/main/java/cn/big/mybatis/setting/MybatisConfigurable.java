@@ -1,6 +1,6 @@
 package cn.big.mybatis.setting;
 
-import cn.big.mybatis.generate.StatementGenerator;
+import cn.big.mybatis.generate.GenerateUtil;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Sets;
@@ -67,28 +67,28 @@ public class MybatisConfigurable implements SearchableConfigurable {
     @Override
     public boolean isModified() {
         return mybatisSetting.getStatementGenerateModel().getIdentifier() != mybatisSettingForm.modelComboBox.getSelectedIndex()
-                || !joiner.join(StatementGenerator.INSERT_GENERATOR.getPatterns()).equals(mybatisSettingForm.insertPatternTextField.getText())
-                || !joiner.join(StatementGenerator.DELETE_GENERATOR.getPatterns()).equals(mybatisSettingForm.deletePatternTextField.getText())
-                || !joiner.join(StatementGenerator.UPDATE_GENERATOR.getPatterns()).equals(mybatisSettingForm.updatePatternTextField.getText())
-                || !joiner.join(StatementGenerator.SELECT_GENERATOR.getPatterns()).equals(mybatisSettingForm.selectPatternTextField.getText());
+                || !joiner.join(GenerateUtil.INSERT_GENERATOR.getPatterns()).equals(mybatisSettingForm.insertPatternTextField.getText())
+                || !joiner.join(GenerateUtil.DELETE_GENERATOR.getPatterns()).equals(mybatisSettingForm.deletePatternTextField.getText())
+                || !joiner.join(GenerateUtil.UPDATE_GENERATOR.getPatterns()).equals(mybatisSettingForm.updatePatternTextField.getText())
+                || !joiner.join(GenerateUtil.SELECT_GENERATOR.getPatterns()).equals(mybatisSettingForm.selectPatternTextField.getText());
     }
 
     @Override
     public void apply() throws ConfigurationException {
         mybatisSetting.setStatementGenerateModel(GenerateModel.getInstance(mybatisSettingForm.modelComboBox.getSelectedIndex()));
-        StatementGenerator.INSERT_GENERATOR.setPatterns(Sets.newHashSet(splitter.split(mybatisSettingForm.insertPatternTextField.getText())));
-        StatementGenerator.DELETE_GENERATOR.setPatterns(Sets.newHashSet(splitter.split(mybatisSettingForm.deletePatternTextField.getText())));
-        StatementGenerator.UPDATE_GENERATOR.setPatterns(Sets.newHashSet(splitter.split(mybatisSettingForm.updatePatternTextField.getText())));
-        StatementGenerator.SELECT_GENERATOR.setPatterns(Sets.newHashSet(splitter.split(mybatisSettingForm.selectPatternTextField.getText())));
+        GenerateUtil.INSERT_GENERATOR.setPatterns(Sets.newHashSet(splitter.split(mybatisSettingForm.insertPatternTextField.getText())));
+        GenerateUtil.DELETE_GENERATOR.setPatterns(Sets.newHashSet(splitter.split(mybatisSettingForm.deletePatternTextField.getText())));
+        GenerateUtil.UPDATE_GENERATOR.setPatterns(Sets.newHashSet(splitter.split(mybatisSettingForm.updatePatternTextField.getText())));
+        GenerateUtil.SELECT_GENERATOR.setPatterns(Sets.newHashSet(splitter.split(mybatisSettingForm.selectPatternTextField.getText())));
     }
 
     @Override
     public void reset() {
         mybatisSettingForm.modelComboBox.setSelectedIndex(mybatisSetting.getStatementGenerateModel().getIdentifier());
-        mybatisSettingForm.insertPatternTextField.setText(joiner.join(StatementGenerator.INSERT_GENERATOR.getPatterns()));
-        mybatisSettingForm.deletePatternTextField.setText(joiner.join(StatementGenerator.DELETE_GENERATOR.getPatterns()));
-        mybatisSettingForm.updatePatternTextField.setText(joiner.join(StatementGenerator.UPDATE_GENERATOR.getPatterns()));
-        mybatisSettingForm.selectPatternTextField.setText(joiner.join(StatementGenerator.SELECT_GENERATOR.getPatterns()));
+        mybatisSettingForm.insertPatternTextField.setText(joiner.join(GenerateUtil.INSERT_GENERATOR.getPatterns()));
+        mybatisSettingForm.deletePatternTextField.setText(joiner.join(GenerateUtil.DELETE_GENERATOR.getPatterns()));
+        mybatisSettingForm.updatePatternTextField.setText(joiner.join(GenerateUtil.UPDATE_GENERATOR.getPatterns()));
+        mybatisSettingForm.selectPatternTextField.setText(joiner.join(GenerateUtil.SELECT_GENERATOR.getPatterns()));
     }
 
     @Override

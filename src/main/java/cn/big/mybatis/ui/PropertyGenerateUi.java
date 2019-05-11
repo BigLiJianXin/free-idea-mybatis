@@ -30,6 +30,9 @@ public class PropertyGenerateUi extends JDialog {
 	private JScrollPane fieldScorePane;
 	private Project project;
 
+	private JLabel dbName;
+	private JLabel tableName;
+
 	public PropertyGenerateUi(Project project) {
 
 		this.project = project;

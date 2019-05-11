@@ -2,11 +2,10 @@ package cn.big.mybatis.inspection;
 
 import cn.big.mybatis.annotation.Annotation;
 import cn.big.mybatis.dom.model.Select;
+import cn.big.mybatis.generate.StatementGenerator;
+import cn.big.mybatis.locator.MapperLocator;
+import cn.big.mybatis.service.JavaService;
 import cn.big.mybatis.util.JavaUtils;
-
-import java.util.Collections;
-import java.util.Optional;
-
 import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
@@ -15,14 +14,12 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.DomElement;
-import cn.big.mybatis.generate.StatementGenerator;
-import cn.big.mybatis.locator.MapperLocator;
-import cn.big.mybatis.service.JavaService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -66,7 +63,7 @@ public class MapperMethodInspection extends MapperInspection {
 						.findStatement(method);
 
 		if (!optionalDomElement.isPresent()) {
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final DomElement domElement = optionalDomElement.get();
@@ -75,7 +72,7 @@ public class MapperMethodInspection extends MapperInspection {
 			final Select selectStatement = (Select) domElement;
 
 			if (selectStatement.getResultMap().getValue() != null) {
-				return Optional.absent();
+				return Optional.empty();
 			}
 
 			final Optional<PsiClass> methodResultType = StatementGenerator.getSelectResultType(method);
@@ -108,7 +105,7 @@ public class MapperMethodInspection extends MapperInspection {
 			}
 		}
 
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 	private Optional<ProblemDescriptor> checkStatementExists(
@@ -126,6 +123,6 @@ public class MapperMethodInspection extends MapperInspection {
 					isOnTheFly));
 		}
 
-		return Optional.absent();
+		return Optional.empty();
 	}
 }

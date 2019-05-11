@@ -5,8 +5,6 @@ import cn.big.mybatis.dom.model.Mapper;
 import cn.big.mybatis.util.Icons;
 import cn.big.mybatis.util.JavaUtils;
 import cn.big.mybatis.util.MapperUtils;
-import com.google.common.base.Optional;
-
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
@@ -18,11 +16,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
-
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * @author yanglin

@@ -92,12 +92,12 @@ public abstract class StatementGenerator {
 		GenerateModel model = MybatisSetting.getInstance().getStatementGenerateModel();
 		String target = method.getName();
 		List<StatementGenerator> result = Lists.newArrayList();
-		for (StatementGenerator generator : GeneratorUtil.ALL) {
+		for (StatementGenerator generator : GenerateUtil.ALL) {
 			if (model.matchesAny(generator.getPatterns(), target)) {
 				result.add(generator);
 			}
 		}
-		return CollectionUtils.isNotEmpty(result) ? result.toArray(new StatementGenerator[0]) : GeneratorUtil.ALL.toArray(new StatementGenerator[0]);
+		return CollectionUtils.isNotEmpty(result) ? result.toArray(new StatementGenerator[0]) : GenerateUtil.ALL.toArray(new StatementGenerator[0]);
 	}
 
 	private Set<String> patterns;

@@ -4,8 +4,6 @@ import cn.big.mybatis.dom.model.IdDomElement;
 import cn.big.mybatis.dom.model.Mapper;
 import cn.big.mybatis.util.JavaUtils;
 import cn.big.mybatis.util.MapperUtils;
-import com.google.common.base.Optional;
-
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
@@ -22,9 +20,10 @@ import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.xml.DomElement;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * @author yanglin
@@ -49,19 +48,21 @@ public class JavaService {
 
     public Optional<PsiClass> getReferenceClazzOfPsiField(@NotNull PsiElement field) {
         if (!(field instanceof PsiField)) {
-            return Optional.absent();
+            return Optional.empty();
         }
         PsiType type = ((PsiField) field).getType();
-        return type instanceof PsiClassReferenceType ? Optional.fromNullable(((PsiClassReferenceType) type).resolve()) : Optional.<PsiClass>absent();
+        return type instanceof PsiClassReferenceType ? Optional.ofNullable(((PsiClassReferenceType) type).resolve()) : Optional.empty();
     }
 
     public Optional<DomElement> findStatement(@Nullable PsiMethod method) {
-        CommonProcessors.FindFirstProcessor<DomElement> processor = new CommonProcessors.FindFirstProcessor<DomElement>();
+        CommonProcessors.FindFirstProcessor<DomElement> processor = new CommonProcessors.FindFirstProcessor<>();
+        if (method == null) {
+            return Optional.empty();
+        }
         process(method, processor);
-        return processor.isFound() ? Optional.fromNullable(processor.getFoundValue()) : Optional.<DomElement>absent();
+        return processor.isFound() ? Optional.ofNullable(processor.getFoundValue()) : Optional.empty();
     }
 
-    @SuppressWarnings("unchecked")
     public void process(@NotNull PsiMethod psiMethod, @NotNull Processor<IdDomElement> processor) {
         PsiClass psiClass = psiMethod.getContainingClass();
         if (null == psiClass) return;
@@ -75,7 +76,6 @@ public class JavaService {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void process(@NotNull PsiClass clazz, @NotNull Processor<Mapper> processor) {
         String ns = clazz.getQualifiedName();
         for (Mapper mapper : MapperUtils.findMappers(clazz.getProject())) {
@@ -96,7 +96,7 @@ public class JavaService {
     public <T> Optional<T> findWithFindFirstProcessor(@NotNull PsiElement target) {
         CommonProcessors.FindFirstProcessor<T> processor = new CommonProcessors.FindFirstProcessor<T>();
         process(target, processor);
-        return Optional.fromNullable(processor.getFoundValue());
+        return Optional.ofNullable(processor.getFoundValue());
     }
 
     public void importClazz(PsiJavaFile file, String clazzName) {

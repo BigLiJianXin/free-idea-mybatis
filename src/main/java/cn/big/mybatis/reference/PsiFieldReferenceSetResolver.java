@@ -2,16 +2,15 @@ package cn.big.mybatis.reference;
 
 import cn.big.mybatis.dom.MapperBacktrackingUtils;
 import cn.big.mybatis.util.JavaUtils;
-import com.google.common.base.Optional;
-
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.xml.XmlAttributeValue;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * @author yanglin
@@ -38,14 +37,14 @@ public class PsiFieldReferenceSetResolver extends ContextReferenceSetResolver<Xm
                 return JavaUtils.findSettablePsiField(clazz, text);
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     @NotNull
     @Override
     public Optional<PsiField> getStartElement(@Nullable String firstText) {
         Optional<PsiClass> clazz = MapperBacktrackingUtils.getPropertyClazz(getElement());
-        return clazz.isPresent() ? JavaUtils.findSettablePsiField(clazz.get(), firstText) : Optional.<PsiField>absent();
+        return clazz.isPresent() ? JavaUtils.findSettablePsiField(clazz.get(), firstText) : Optional.<PsiField>empty();
     }
 
 }
