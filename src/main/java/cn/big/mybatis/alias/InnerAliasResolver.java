@@ -17,24 +17,24 @@ import java.util.Set;
 public class InnerAliasResolver extends AliasResolver {
 
 	private final Set<AliasDesc> innerAliasDescs = ImmutableSet.of(
-			AliasDesc.create(JavaUtils.findClazz(project, "java.lang.String").get(), "string"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.lang.Byte").get(), "byte"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.lang.Long").get(), "long"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.lang.Short").get(), "short"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.lang.Integer").get(), "int"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.lang.Integer").get(), "integer"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.lang.Double").get(), "double"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.lang.Float").get(), "float"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.lang.Boolean").get(), "boolean"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.util.Date").get(), "date"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.math.BigDecimal").get(), "decimal"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.lang.Object").get(), "object"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.util.Map").get(), "map"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.util.HashMap").get(), "hashmap"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.util.List").get(), "list"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.util.ArrayList").get(), "arraylist"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.util.Collection").get(), "collection"),
-			AliasDesc.create(JavaUtils.findClazz(project, "java.util.Iterator").get(), "iterator")
+			JavaUtils.findClazz(project, "java.lang.String").map(t -> AliasDesc.create(t, "string")).get(),
+			JavaUtils.findClazz(project, "java.lang.Byte").map(t -> AliasDesc.create(t, "byte")).get(),
+			JavaUtils.findClazz(project, "java.lang.Long").map(t -> AliasDesc.create(t, "long")).get(),
+			JavaUtils.findClazz(project, "java.lang.Short").map(t -> AliasDesc.create(t, "short")).get(),
+			JavaUtils.findClazz(project, "java.lang.Integer").map(t -> AliasDesc.create(t, "int")).get(),
+			JavaUtils.findClazz(project, "java.lang.Integer").map(t -> AliasDesc.create(t, "integer")).get(),
+			JavaUtils.findClazz(project, "java.lang.Double").map(t -> AliasDesc.create(t, "double")).get(),
+			JavaUtils.findClazz(project, "java.lang.Float").map(t -> AliasDesc.create(t, "float")).get(),
+			JavaUtils.findClazz(project, "java.lang.Boolean").map(t -> AliasDesc.create(t, "boolean")).get(),
+			JavaUtils.findClazz(project, "java.util.Date").map(t -> AliasDesc.create(t, "date")).get(),
+			JavaUtils.findClazz(project, "java.math.BigDecimal").map(t -> AliasDesc.create(t, "decimal")).get(),
+			JavaUtils.findClazz(project, "java.lang.Object").map(t -> AliasDesc.create(t, "object")).get(),
+			JavaUtils.findClazz(project, "java.util.Map").map(t -> AliasDesc.create(t, "map")).get(),
+			JavaUtils.findClazz(project, "java.util.HashMap").map(t -> AliasDesc.create(t, "hashmap")).get(),
+			JavaUtils.findClazz(project, "java.util.List").map(t -> AliasDesc.create(t, "list")).get(),
+			JavaUtils.findClazz(project, "java.util.ArrayList").map(t -> AliasDesc.create(t, "arraylist")).get(),
+			JavaUtils.findClazz(project, "java.util.Collection").map(t -> AliasDesc.create(t, "collection")).get(),
+			JavaUtils.findClazz(project, "java.util.Iterator").map(t -> AliasDesc.create(t, "iterator")).get()
 	);
 
 	public InnerAliasResolver(Project project) {

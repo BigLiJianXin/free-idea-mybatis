@@ -1,8 +1,7 @@
 package cn.big.mybatis.alias;
 
-import com.google.common.base.Optional;
+import cn.big.mybatis.util.JavaUtils;
 import com.google.common.collect.Sets;
-
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -13,12 +12,11 @@ import com.intellij.spring.SpringManager;
 import com.intellij.spring.model.SpringBeanPointer;
 import com.intellij.spring.model.utils.SpringPropertyUtils;
 import com.intellij.spring.model.xml.beans.SpringPropertyDefinition;
-
-import cn.big.mybatis.util.JavaUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -58,14 +56,16 @@ public class BeanAliasResolver extends PackageAliasResolver {
 			for (Object domBean : domBeans) {
 				SpringBeanPointer pointer = (SpringBeanPointer) domBean;
 				PsiClass beanClass = pointer.getBeanClass();
-				if (beanClass != null && beanClass.equals(sqlSessionFactoryClazz)) {
-					SpringPropertyDefinition basePackages = SpringPropertyUtils.findPropertyByName(pointer.getSpringBean(), MAPPER_ALIAS_PROPERTY);
-					if (basePackages != null) {
-						final String value = basePackages.getValueElement().getStringValue();
-						if (value != null) {
-							res.add(value);
-						}
-					}
+				if (beanClass == null || !beanClass.equals(sqlSessionFactoryClazz)) {
+					continue;
+				}
+				SpringPropertyDefinition basePackages = SpringPropertyUtils.findPropertyByName(pointer.getSpringBean(), MAPPER_ALIAS_PROPERTY);
+				if (basePackages == null || basePackages.getValueElement() == null) {
+					continue;
+				}
+				String value = basePackages.getValueElement().getStringValue();
+				if (value != null) {
+					res.add(value);
 				}
 			}
 

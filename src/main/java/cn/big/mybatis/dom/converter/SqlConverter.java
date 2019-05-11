@@ -7,6 +7,7 @@ import cn.big.mybatis.dom.model.Mapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -17,6 +18,9 @@ public class SqlConverter extends IdBasedTagConverter {
 	@NotNull
 	@Override
 	public Collection<? extends IdDomElement> getComparisons(@Nullable Mapper mapper, ConvertContext context) {
+		if (mapper == null) {
+			return new ArrayList<>();
+		}
 		return mapper.getSqls();
 	}
 

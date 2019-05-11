@@ -1,11 +1,11 @@
 package cn.big.mybatis.dom.converter;
 
+import cn.big.mybatis.dom.model.IdDomElement;
+import cn.big.mybatis.dom.model.Mapper;
 import cn.big.mybatis.util.MapperUtils;
 import cn.big.mybatis.util.MybatisConstants;
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.ElementManipulators;
@@ -21,9 +21,6 @@ import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomUtil;
 import com.intellij.util.xml.GenericDomValue;
 import com.intellij.util.xml.PsiClassConverter;
-import cn.big.mybatis.dom.model.IdDomElement;
-import cn.big.mybatis.dom.model.Mapper;
-
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -51,7 +49,7 @@ public abstract class IdBasedTagConverter extends ConverterAdaptor<XmlAttributeV
 	@Nullable
 	@Override
 	public XmlAttributeValue fromString(@Nullable @NonNls String value, ConvertContext context) {
-		return matchIdDomElement(selectStrategy(context).getValue(), value, context).orNull();
+		return matchIdDomElement(selectStrategy(context).getValue(), value, context).orElse(null);
 	}
 
 	@NotNull
@@ -60,15 +58,18 @@ public abstract class IdBasedTagConverter extends ConverterAdaptor<XmlAttributeV
 		for (IdDomElement idDomElement : idDomElements) {
 			if (MapperUtils.getIdSignature(idDomElement).equals(value) ||
 					MapperUtils.getIdSignature(idDomElement, contextMapper).equals(value)) {
-				return Optional.of(idDomElement.getId().getXmlAttributeValue());
+				return Optional.ofNullable(idDomElement.getId().getXmlAttributeValue());
 			}
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 	@Nullable
 	@Override
 	public String toString(@Nullable XmlAttributeValue xmlAttribute, ConvertContext context) {
+		if (xmlAttribute == null) {
+			return null;
+		}
 		DomElement domElement = DomUtil.getDomElement(xmlAttribute.getParent().getParent());
 		if (!(domElement instanceof IdDomElement)) {
 			return null;
@@ -144,7 +145,7 @@ public abstract class IdBasedTagConverter extends ConverterAdaptor<XmlAttributeV
 
 		@Nullable
 		@Override
-		public GlobalSearchScope getScope(Project project) {
+		public GlobalSearchScope getScope(@NotNull Project project) {
 			return GlobalSearchScope.allScope(project);
 		}
 
@@ -208,7 +209,7 @@ public abstract class IdBasedTagConverter extends ConverterAdaptor<XmlAttributeV
 		private Set<String> setupGlobalIdSignature() {
 			Mapper contextMapper = MapperUtils.getMapper(context.getInvocationElement());
 			Collection<? extends IdDomElement> idDomElements = selectStrategy(context).getValue();
-			Set<String> res = new HashSet<String>(idDomElements.size());
+			Set<String> res = new HashSet<>(idDomElements.size());
 			for (IdDomElement ele : idDomElements) {
 				res.add(MapperUtils.getIdSignature(ele, contextMapper));
 			}

@@ -15,6 +15,7 @@ import com.intellij.util.xml.DomJavaUtil;
 import com.intellij.util.xml.GenericDomValue;
 import com.intellij.util.xml.PsiClassConverter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +32,7 @@ public class AliasConverter extends ConverterAdaptor<PsiClass> implements Custom
 	public PsiClass fromString(@Nullable @NonNls String s, ConvertContext context) {
 		if (StringUtil.isEmptyOrSpaces(s)) return null;
 		if (!s.contains(MybatisConstants.DOT_SEPARATOR)) {
-			return AliasFacade.getInstance(context.getProject()).findPsiClass(context.getXmlElement(), s).orNull();
+			return AliasFacade.getInstance(context.getProject()).findPsiClass(context.getXmlElement(), s).orElse(null);
 		}
 		return DomJavaUtil.findClass(s.trim(), context.getFile(), context.getModule(), GlobalSearchScope.allScope(context.getProject()));
 	}
@@ -45,7 +46,8 @@ public class AliasConverter extends ConverterAdaptor<PsiClass> implements Custom
 	@NotNull
 	@Override
 	public PsiReference[] createReferences(GenericDomValue<PsiClass> value, PsiElement element, ConvertContext context) {
-		if (((XmlAttributeValue) element).getValue().contains(MybatisConstants.DOT_SEPARATOR)) {
+		String elementValue = ((XmlAttributeValue) element).getValue();
+		if (StringUtils.isNotBlank(elementValue) && elementValue.contains(MybatisConstants.DOT_SEPARATOR)) {
 			return delegate.createReferences(value, element, context);
 		} else {
 			return new PsiReference[]{new AliasClassReference((XmlAttributeValue) element)};

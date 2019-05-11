@@ -9,9 +9,6 @@ import cn.big.mybatis.ui.ListSelectionListener;
 import cn.big.mybatis.ui.UiComponentFacade;
 import cn.big.mybatis.util.CollectionUtils;
 import cn.big.mybatis.util.JavaUtils;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -31,9 +28,12 @@ import com.intellij.util.CommonProcessors.CollectProcessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+
 
 /**
  * @author yanglin
@@ -41,18 +41,16 @@ import java.util.Set;
 public abstract class StatementGenerator {
 
 
-	private static final Function<Mapper, String> FUN = new Function<Mapper, String>() {
-		@Override
-		public String apply(Mapper mapper) {
-			VirtualFile vf = mapper.getXmlTag().getContainingFile().getVirtualFile();
-			if (null == vf) return "";
-			return vf.getCanonicalPath();
-		}
+	private static final Function<Mapper, String> FUN = (mapper) -> {
+		if (mapper == null) return "";
+		VirtualFile vf = mapper.getXmlTag().getContainingFile().getVirtualFile();
+		if (null == vf) return "";
+		return vf.getCanonicalPath();
 	};
 
 	public static Optional<PsiClass> getSelectResultType(@Nullable PsiMethod method) {
 		if (null == method) {
-			return Optional.absent();
+			return Optional.empty();
 		}
 		PsiType returnType = method.getReturnType();
 		if (returnType instanceof PsiPrimitiveType && !PsiType.VOID.equals(returnType)) {
@@ -65,9 +63,9 @@ public abstract class StatementGenerator {
 					type = (PsiClassReferenceType) parameters[0];
 				}
 			}
-			return Optional.fromNullable(type.resolve());
+			return java.util.Optional.ofNullable(type.resolve());
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 
@@ -111,13 +109,13 @@ public abstract class StatementGenerator {
 	public void execute(@NotNull final PsiMethod method) {
 		PsiClass psiClass = method.getContainingClass();
 		if (null == psiClass) return;
-		CollectProcessor processor = new CollectProcessor();
+		CollectProcessor<Mapper> processor = new CollectProcessor<>();
 		JavaService.getInstance(method.getProject()).process(psiClass, processor);
-		final List<Mapper> mappers = Lists.newArrayList(processor.getResults());
+		final List<Mapper> mappers = new ArrayList<>(processor.getResults());
 		if (1 == mappers.size()) {
-			setupTag(method, (Mapper) Iterables.getOnlyElement(mappers, (Object) null));
+			setupTag(method, Iterables.getOnlyElement(mappers, null));
 		} else if (mappers.size() > 1) {
-			Collection<String> paths = Collections2.transform(mappers, FUN);
+			String[] paths = mappers.stream().map(FUN).toArray(String[]::new);
 			UiComponentFacade.getInstance(method.getProject()).showListPopup("Choose target mapper xml to generate", new ListSelectionListener() {
 				@Override
 				public void selected(int index) {
@@ -128,7 +126,7 @@ public abstract class StatementGenerator {
 				public boolean isWriteAction() {
 					return true;
 				}
-			}, paths.toArray(new String[0]));
+			}, paths);
 		}
 	}
 

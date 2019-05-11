@@ -3,7 +3,10 @@ package cn.big.mybatis.inspection;
 import cn.big.mybatis.annotation.Annotation;
 import cn.big.mybatis.dom.model.Select;
 import cn.big.mybatis.util.JavaUtils;
-import com.google.common.base.Optional;
+
+import java.util.Collections;
+import java.util.Optional;
+
 import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
@@ -20,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author yanglin
@@ -44,19 +48,12 @@ public class MapperMethodInspection extends MapperInspection {
 			final PsiMethod method,
 			final InspectionManager manager,
 			final boolean isOnTheFly) {
-		final List<ProblemDescriptor> problems = new ArrayList<>(2);
+		List<ProblemDescriptor> problems = new ArrayList<>(2);
 		Optional<ProblemDescriptor> optionalProblem = checkStatementExists(method, manager, isOnTheFly);
-
-		if (optionalProblem.isPresent()) {
-			problems.add(optionalProblem.get());
-		}
-
+		Consumer<ProblemDescriptor> consumer = t -> problems.add(t);
+		optionalProblem.ifPresent(consumer);
 		optionalProblem = checkResultType(method, manager, isOnTheFly);
-
-		if (optionalProblem.isPresent()) {
-			problems.add(optionalProblem.get());
-		}
-
+		optionalProblem.ifPresent(consumer);
 		return problems;
 	}
 

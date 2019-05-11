@@ -1,12 +1,17 @@
 package cn.big.mybatis.contributor;
 
+import cn.big.mybatis.annotation.Annotation;
 import cn.big.mybatis.dom.model.IdDomElement;
 import cn.big.mybatis.util.Icons;
 import cn.big.mybatis.util.JavaUtils;
 import cn.big.mybatis.util.MapperUtils;
 import cn.big.mybatis.util.MybatisConstants;
-import com.google.common.base.Optional;
-import com.intellij.codeInsight.completion.*;
+import com.intellij.codeInsight.completion.CompletionContributor;
+import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.codeInsight.completion.CompletionProvider;
+import com.intellij.codeInsight.completion.CompletionResultSet;
+import com.intellij.codeInsight.completion.CompletionType;
+import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.project.Project;
@@ -15,11 +20,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.util.ProcessingContext;
-import cn.big.mybatis.annotation.Annotation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 /**
  * @author yanglin
@@ -28,21 +34,19 @@ public class TestParamContributor extends CompletionContributor {
 	private static final Logger logger = LoggerFactory.getLogger(TestParamContributor.class);
 
 	public TestParamContributor() {
-		extend(CompletionType.BASIC,
-				XmlPatterns.psiElement()
+		extend(CompletionType.BASIC, XmlPatterns.psiElement()
 						.inside(XmlPatterns.xmlAttributeValue()
 								.inside(XmlPatterns.xmlAttribute().withName("test"))),
 				new CompletionProvider<CompletionParameters>() {
 					@Override
-					protected void addCompletions(
-							@NotNull final CompletionParameters parameters,
-							final ProcessingContext context,
-							@NotNull final CompletionResultSet result) {
+					protected void addCompletions(@NotNull final CompletionParameters parameters,
+												  final ProcessingContext context,
+												  @NotNull final CompletionResultSet result) {
 						final PsiElement position = parameters.getPosition();
 						addElementForPsiParameter(
 								position.getProject(),
 								result,
-								MapperUtils.findParentIdDomElement(position).orNull());
+								MapperUtils.findParentIdDomElement(position).orElse(null));
 					}
 				});
 	}
@@ -55,7 +59,7 @@ public class TestParamContributor extends CompletionContributor {
 			return;
 		}
 
-		final PsiMethod method = JavaUtils.findMethod(project, element).orNull();
+		final PsiMethod method = JavaUtils.findMethod(project, element).orElse(null);
 
 		if (method == null) {
 			logger.info("psiMethod null");
@@ -77,7 +81,7 @@ public class TestParamContributor extends CompletionContributor {
 				final PsiParameter parameter = parameters[i];
 				final Optional<String> value = JavaUtils.getAnnotationValueText(parameter, Annotation.PARAM);
 				result.addElement(buildLookupElementWithIcon(
-						value.isPresent() ? value.get() : "param" + (i + 1),
+						value.orElse("param" + (i + 1)),
 						parameter.getType().getPresentableText()));
 			}
 		}

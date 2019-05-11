@@ -1,5 +1,6 @@
 package cn.big.mybatis.action;
 
+import cn.big.mybatis.ui.PropertyGenerateUi;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.generation.actions.BaseGenerateAction;
 import com.intellij.database.model.DasColumn;
@@ -7,7 +8,6 @@ import com.intellij.database.model.DasNamespace;
 import com.intellij.database.model.DasObject;
 import com.intellij.database.model.ObjectKind;
 import com.intellij.database.psi.DbDataSource;
-import com.intellij.database.psi.DbTable;
 import com.intellij.database.util.DasUtil;
 import com.intellij.database.util.DbUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -15,14 +15,15 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.containers.JBIterable;
-import cn.big.mybatis.ui.PropertyGenerateUi;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 日期 2018-11-30
@@ -47,10 +48,14 @@ public class DemoAction extends BaseGenerateAction {
 		}
 		// 获取当前编辑器中的文件
 		PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
-
+		if (psiFile == null) {
+			return;
+		}
 		//当前的文件类
 		PsiClass targetClass = getTargetClass(editor, psiFile);
-
+		if (targetClass == null) {
+			return;
+		}
 
 		WriteCommandAction.runWriteCommandAction(project, () -> {
 			//创建class
@@ -75,19 +80,18 @@ public class DemoAction extends BaseGenerateAction {
 			if (schemas.isEmpty()) {
 				continue;
 			}
-			JBIterable<? extends DasObject> dbTables = schemas.get(0).getDasChildren(ObjectKind.TABLE);
+			DasNamespace dasNamespace = schemas.get(0);
+			if (dasNamespace == null) {
+				continue;
+			}
+			JBIterable<? extends DasObject> dbTables = dasNamespace.getDasChildren(ObjectKind.TABLE);
 
 			for (DasObject table : dbTables) {
 				JBIterable<? extends DasColumn> columns = DasUtil.getColumns(table);
 				for (DasColumn column : columns) {
-
 					System.out.println(column.getName());
 				}
 			}
 		}
-		List<DbTable> dbTableList = new ArrayList<>();
-
-
-		System.out.println("size:" + dbTableList.size());
 	}
 }
