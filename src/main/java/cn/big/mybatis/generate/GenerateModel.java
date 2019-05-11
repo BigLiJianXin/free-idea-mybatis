@@ -44,7 +44,7 @@ public abstract class GenerateModel {
 	}
 
 	public boolean matchesAny(Collection<String> patterns, String target) {
-		return matchesAny(patterns.toArray(new String[patterns.size()]), target);
+		return matchesAny(patterns.toArray(new String[0]), target);
 	}
 
 	protected abstract boolean apply(String pattern, String target);

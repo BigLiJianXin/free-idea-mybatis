@@ -99,7 +99,7 @@ public abstract class StatementGenerator {
 				result.add(generator);
 			}
 		}
-		return CollectionUtils.isNotEmpty(result) ? result.toArray(new StatementGenerator[result.size()]) : GeneratorUtil.ALL.toArray(new StatementGenerator[GeneratorUtil.ALL.size()]);
+		return CollectionUtils.isNotEmpty(result) ? result.toArray(new StatementGenerator[0]) : GeneratorUtil.ALL.toArray(new StatementGenerator[0]);
 	}
 
 	private Set<String> patterns;
@@ -128,7 +128,7 @@ public abstract class StatementGenerator {
 				public boolean isWriteAction() {
 					return true;
 				}
-			}, paths.toArray(new String[paths.size()]));
+			}, paths.toArray(new String[0]));
 		}
 	}
 

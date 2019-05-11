@@ -40,7 +40,7 @@ public class AliasClassReference extends PsiReferenceBase<XmlAttributeValue> {
 	public Object[] getVariants() {
 		AliasFacade aliasFacade = AliasFacade.getInstance(getElement().getProject());
 		Collection<String> result = Collections2.transform(aliasFacade.getAliasDescs(getElement()), function);
-		return result.toArray(new String[result.size()]);
+		return result.toArray(new String[0]);
 	}
 
 }

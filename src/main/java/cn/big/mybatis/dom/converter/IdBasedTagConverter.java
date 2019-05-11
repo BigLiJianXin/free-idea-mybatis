@@ -160,7 +160,7 @@ public abstract class IdBasedTagConverter extends ConverterAdaptor<XmlAttributeV
 				refs.remove(refs.size() - 1);
 				refs.add(vr);
 			}
-			return refs.toArray(new PsiReference[refs.size()]);
+			return refs.toArray(new PsiReference[0]);
 		}
 
 		private TextRange getTextRange(PsiElement element) {
@@ -191,7 +191,7 @@ public abstract class IdBasedTagConverter extends ConverterAdaptor<XmlAttributeV
 		@Override
 		public Object[] getVariants() {
 			Set<String> res = getElement().getText().contains(MybatisConstants.DOT_SEPARATOR) ? setupContextIdSignature() : setupGlobalIdSignature();
-			return res.toArray(new String[res.size()]);
+			return res.toArray(new String[0]);
 		}
 
 		private Set<String> setupContextIdSignature() {

@@ -129,7 +129,7 @@ public class GenerateMapperIntention extends GenericIntention {
                 return null == module ? relativePath : ("[" + module.getName() + "] " + relativePath);
             }
         }));
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
 
     private Map<String, PsiDirectory> getPathMap(Collection<PsiDirectory> directories) {
