@@ -47,7 +47,7 @@ public class MapperMethodInspection extends MapperInspection {
 			final boolean isOnTheFly) {
 		List<ProblemDescriptor> problems = new ArrayList<>(2);
 		Optional<ProblemDescriptor> optionalProblem = checkStatementExists(method, manager, isOnTheFly);
-		Consumer<ProblemDescriptor> consumer = t -> problems.add(t);
+		Consumer<ProblemDescriptor> consumer = problems::add;
 		optionalProblem.ifPresent(consumer);
 		optionalProblem = checkResultType(method, manager, isOnTheFly);
 		optionalProblem.ifPresent(consumer);

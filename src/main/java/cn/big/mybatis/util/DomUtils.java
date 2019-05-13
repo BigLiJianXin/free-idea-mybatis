@@ -27,7 +27,7 @@ public final class DomUtils {
 	public static <T extends DomElement> Collection<T> findDomElements(@NotNull Project project, Class<T> clazz) {
 		GlobalSearchScope scope = GlobalSearchScope.allScope(project);
 		List<DomFileElement<T>> elements = DomService.getInstance().getFileElements(clazz, project, scope);
-		return elements.stream().map(input -> input.getRootElement()).collect(Collectors.toList());
+		return elements.stream().map(DomFileElement::getRootElement).collect(Collectors.toList());
 	}
 
 	public static boolean isMybatisFile(@Nullable PsiFile file) {
