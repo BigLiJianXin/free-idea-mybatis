@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 public class MapperLineMarkerProvider extends RelatedItemLineMarkerProvider {
 
-	private static final Function<DomElement, XmlTag> FUN = domElement -> domElement.getXmlTag();
+	private static final Function<DomElement, XmlTag> FUN = DomElement::getXmlTag;
 
 	@Override
 	protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
